@@ -10,19 +10,18 @@ from oj.models import User
 from oj.permissions import IsLogin, IsCurrentUser, IsAdmin
 
 class SearchUserFilter(filters.FilterSet):
-	username = filters.CharFilter(lookup_expr='icontains')
+	username = filters.CharFilter(method='filter_username')
 	class Meta:
 		model = User
 		fields = ['username']
+	def filter_username(self, queryset, name, value):
+		# Order the queryset by the relevance of username
+		return queryset.filter(username__icontains=value).order_by(Length(Replace('username', Value(value))))
 
 class UserList(generics.ListCreateAPIView):
+	queryset = User.objects.all()
 	serializer_class = UserListSerializer
 	filterset_class = SearchUserFilter
-
-	def get_queryset(self):
-		if 'search' in self.request.GET:
-			return User.objects.order_by(Length(Replace('username', Value(self.request.GET['search']))))
-		return User.objects.all()
 
 	def get_permissions(self):
 		if self.request.method != 'GET':
