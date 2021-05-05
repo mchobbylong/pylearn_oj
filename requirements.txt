@@ -9,7 +9,7 @@ django-versatileimagefield==2.0
 djangorestframework==3.11.2
 httpie==2.0.0
 idna==2.8
-Jinja2==2.11.1
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 mysqlclient==1.4.6
 Pillow==8.1.1
